@@ -22,16 +22,16 @@ export NVCC_PREPEND_FLAGS="${NVCC_PREPEND_FLAGS:-}"
 micromamba activate truthrl-verl
 
 echo "Setting up SSH tunnel to judge on rz01..."
-ssh -N -o ServerAliveInterval=60 -o ServerAliveCountMax=5 -L 0.0.0.0:8001:localhost:8001 mfp5696@e5-cse-rz01.cse.psu.edu &
+ssh -N -o ServerAliveInterval=60 -o ServerAliveCountMax=5 -L 0.0.0.0:8001:localhost:8001 
 SSH_TUNNEL_PID=$!
 trap "echo 'Killing SSH tunnel...'; kill $SSH_TUNNEL_PID" EXIT
 sleep 5
 echo "SSH tunnel established (PID: $SSH_TUNNEL_PID)"
 
-export FLASHINFER_WORKSPACE_DIR=/storage/group/vxn9/default/260218_Muyu/.cache/flashinfer
+export FLASHINFER_WORKSPACE_DIR=/storage/group/vxn9/default/.cache/flashinfer
 mkdir -p $FLASHINFER_WORKSPACE_DIR
 
-export CUDA_HOME=/storage/work/mfp5696/.conda/envs/truthrl-verl
+export CUDA_HOME=/storage/work/.conda/envs/truthrl-verl
 export PATH=$CUDA_HOME/bin:$PATH
 export LD_LIBRARY_PATH=$CUDA_HOME/lib:$LD_LIBRARY_PATH
 export TOKENIZERS_PARALLELISM=false
@@ -55,7 +55,7 @@ LR=1e-6
 KL_LOSS_COEF=0.001
 BSZ=64
 
-verl_workdir=/storage/group/vxn9/default/260218_Muyu/260218_TruthRL/training/verl
+verl_workdir=/storage/group/default/260218_TruthRL/training/verl
 train_files=$DATA_DIR/train.parquet
 val_files=$DATA_DIR/test.parquet
 
@@ -127,7 +127,7 @@ printenv
 echo "Starting RAY HEAD on $head_node"
 srun --cpu-bind=none --nodes=1 --ntasks=1 -w "$head_node" \
     bash -c "source ~/.bashrc && micromamba activate truthrl-verl && \
-             export FLASHINFER_WORKSPACE_DIR=/storage/group/vxn9/default/260218_Muyu/.cache/flashinfer && \
+             export FLASHINFER_WORKSPACE_DIR=/storage/group/.cache/flashinfer && \
              ray start --head --node-ip-address=\"$head_node_ip\" --port=$port \
              --num-cpus \"${SLURM_CPUS_PER_TASK}\" --num-gpus \"${SLURM_GPUS_PER_NODE}\" --block" &
 
@@ -139,7 +139,7 @@ for ((i = 1; i <= worker_num; i++)); do
     echo "Starting RAY WORKER $i on $node_i"
     srun --nodes=1 --ntasks=1 -w "$node_i" \
         bash -c "source ~/.bashrc && micromamba activate truthrl-verl && \
-                 export FLASHINFER_WORKSPACE_DIR=/storage/group/vxn9/default/260218_Muyu/.cache/flashinfer && \
+                 export FLASHINFER_WORKSPACE_DIR=/storage/group/.cache/flashinfer && \
                  ray start --address \"$ip_head\" \
                  --num-cpus \"${SLURM_CPUS_PER_TASK}\" --num-gpus \"${SLURM_GPUS_PER_NODE}\" --block" &
     sleep 5
