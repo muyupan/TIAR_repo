@@ -406,7 +406,7 @@ if __name__ == "__main__":
    # api_url="http://localhost:8000/v1"
 
     for i in ['20','100','120','140']:
-        generator_name = f"/storage/home/mfp5696/260218_Muyu_vxn9/260218_TruthRL/truthrl_{i}step_checkpoint"
+        generator_name = f"/storage/home/260218_TruthRL/truthrl_{i}step_checkpoint"
         model = InstructModel(model_name=generator_name, decode_batch_size=4, vllm_tensor_parallel_size=2, vllm_gpu_memory_utilization=0.85)
         for dataset in dataset2testsplit:
             for prefix in ['Greedy']:
