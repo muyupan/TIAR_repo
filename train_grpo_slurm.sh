@@ -28,7 +28,7 @@ trap "echo 'Killing SSH tunnel...'; kill $SSH_TUNNEL_PID" EXIT
 sleep 5
 echo "SSH tunnel established (PID: $SSH_TUNNEL_PID)"
 
-export FLASHINFER_WORKSPACE_DIR=/storage/group/vxn9/default/.cache/flashinfer
+export FLASHINFER_WORKSPACE_DIR=/storage/group/
 mkdir -p $FLASHINFER_WORKSPACE_DIR
 
 export CUDA_HOME=/storage/work/.conda/envs/truthrl-verl
